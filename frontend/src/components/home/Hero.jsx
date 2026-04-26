@@ -18,9 +18,9 @@ const Hero = () => {
             <span>Private Guest House Experience</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">
+          <h1 className="text-3xl md:text-6xl font-black text-gray-900 leading-tight mb-4">
             The Comfort of Home. <br />
-            <span className="text-blue-600 italic">The Luxury of a Hotel.</span>
+            <span className="text-primary italic">The Luxury of a Hotel.</span>
           </h1>
 
           <p className="mt-6 text-gray-600 text-lg md:text-xl max-w-2xl">
@@ -76,7 +76,7 @@ const Hero = () => {
             <img
               src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750"
               alt="Boutique Guest House"
-              className="w-full h-[400px] md:h-[500px] object-cover rounded-3xl shadow-2xl"
+              className="w-full h-[400px] max-sm:h-[300px] md:h-[500px] object-cover rounded-3xl shadow-2xl"
             />
             {/* Floating Info Card */}
             <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hidden sm:block">

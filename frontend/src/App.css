@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@theme {
+  /* This defines your primary blue based on your UI */
+  --color-primary: #2563eb;
+  --color-primary-light: #eff6ff;
+  --color-primary-dark: #1d4ed8;
+
+  /* This defines your off-white surface color */
+  --color-surface: #faf9f6;
+
+  /* Custom radius for that boutique feel */
+  --radius-brand: 2rem;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900 antialiased;
+    font-family: "DM Sans", sans-serif;
+  }
+}
