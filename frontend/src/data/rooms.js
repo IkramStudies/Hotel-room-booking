@@ -1,0 +1,66 @@
+export const roomsData = [
+  {
+    id: 1,
+    name: "Master Luxury Suite",
+    type: "Primary Bedroom",
+    price: 120,
+    guests: 2,
+    bed: "King Bed",
+    size: "350 sqft",
+    image: "https://images.unsplash.com/photo-1590490360182-c33d57733427",
+  },
+  {
+    id: 2,
+    name: "Modern Garden Room",
+    type: "Guest Room",
+    price: 85,
+    guests: 2,
+    bed: "Queen Bed",
+    size: "240 sqft",
+    image: "https://images.unsplash.com/photo-1566665797739-1674de7a421a",
+  },
+  {
+    id: 3,
+    name: "Skyline Loft",
+    type: "Private Loft",
+    price: 95,
+    guests: 1,
+    bed: "Queen Bed",
+    size: "200 sqft",
+    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f",
+  },
+  {
+    id: 4,
+    name: "The Executive Studio",
+    type: "Business Suite",
+    price: 110,
+    guests: 2,
+    bed: "King Bed",
+    size: "310 sqft",
+    // New high-end office/bedroom hybrid image
+    image:
+      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&q=80&w=800",
+  },
+  {
+    id: 5,
+    name: "Bohemian Terrace Room",
+    type: "Guest Room",
+    price: 90,
+    guests: 2,
+    bed: "Queen Bed",
+    size: "280 sqft",
+    image: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c",
+  },
+  {
+    id: 6,
+    name: "The Artisan Nook",
+    type: "Small Studio",
+    price: 75,
+    guests: 1,
+    bed: "Full Bed",
+    size: "185 sqft",
+    // This is a direct, robust source for a premium studio image
+    image:
+      "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&q=80&w=800",
+  },
+];
