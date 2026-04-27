@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Mail,
   Lock,
@@ -33,19 +34,52 @@ const AuthPage = () => {
     window.location.href = "http://localhost:5000/api/auth/google";
   };
 
-  const handleAuthAction = (e) => {
+  const handleAuthAction = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      console.log("Logging in...");
-    } else if (!isOtpStage) {
-      if (formData.password !== formData.confirmPassword) {
-        alert("Passwords do not match!");
-        return;
+    try {
+      if (isLogin) {
+        // --- MANUAL LOGIN ---
+        const res = await axios.post(
+          "http://localhost:5000/api/auth/login",
+          { email: formData.email, password: formData.password },
+          { withCredentials: true },
+        );
+        if (res.data.success) {
+          window.location.href = "/";
+        }
+      } else if (!isOtpStage) {
+        // --- REGISTRATION & OTP TRIGGER ---
+        if (formData.password !== formData.confirmPassword) {
+          alert("Passwords do not match!");
+          return;
+        }
+        const res = await axios.post(
+          "http://localhost:5000/api/auth/register",
+          {
+            fullName: formData.fullName,
+            email: formData.email,
+            password: formData.password,
+          },
+        );
+        if (res.data.success) {
+          setIsOtpStage(true);
+        }
+      } else {
+        // --- OTP VERIFICATION ---
+        const res = await axios.post(
+          "http://localhost:5000/api/auth/verify-otp",
+          {
+            email: formData.email,
+            otp: otp,
+          },
+        );
+        if (res.data.success) {
+          setIsSuccess(true);
+        }
       }
-      setIsOtpStage(true);
-    } else {
-      if (otp === "123456") setIsSuccess(true);
-      else alert("Invalid OTP");
+    } catch (err) {
+      // Handles error messages from your authController.js
+      alert(err.response?.data?.message || "An authentication error occurred");
     }
   };
 
@@ -196,7 +230,7 @@ const AuthPage = () => {
                   {isLogin ? "Login" : "Register"} <ArrowRight size={18} />
                 </button>
 
-                {/* --- GOOGLE LOGIN SECTION AT THE BOTTOM --- */}
+                {/* --- GOOGLE LOGIN SECTION --- */}
                 <div className="relative flex items-center justify-center my-6">
                   <div className="border-t border-gray-100 w-full"></div>
                   <span className="bg-white px-4 text-[10px] text-gray-300 uppercase font-bold tracking-[0.2em] absolute">

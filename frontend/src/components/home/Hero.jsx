@@ -35,7 +35,7 @@ const Hero = () => {
       checkOut: checkOutDate,
     });
 
-    navigate(`/booking?${params.toString()}`);
+    navigate(`/book-now?${params.toString()}`);
   };
 
   return (
@@ -58,13 +58,14 @@ const Hero = () => {
             </h1>
 
             <p className="mt-6 text-gray-600 text-lg md:text-xl max-w-2xl">
-              Experience our exclusive residence featuring{" "}
+              Enjoy our hospitality with having &nbsp;
               <span className="font-bold text-gray-800">
-                {propertySettings.totalRooms} private rooms
+                six premium rooms, with special offers just @ $X on weekdays
+                (Mon-Fri) and $y on weekends (Sat-Sun)
               </span>
-              . Enjoy a premium stay with daily booking options starting at just{" "}
+              {/* . Enjoy a stay with daily booking options starting at just{" "} */}
               <span className="font-bold text-gray-800">
-                ${propertySettings.minPrice}/day
+                {/* ${propertySettings.minPrice}/day */}
               </span>
               .
             </p>

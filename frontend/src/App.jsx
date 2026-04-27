@@ -2,10 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/user/Home";
 import Rooms from "./pages/user/Rooms";
-import Booking from "./pages/user/Booking";
+import Booking from "./pages/user/Booking"; // Keeping your existing booking page
+import MyBookings from "./pages/user/MyBookings"; // Adding history page
 import Contact from "./pages/user/Contact";
 import AuthPage from "./pages/user/Login";
 import ScrollToTop from "./components/common/ScrollToTop";
+
 function App() {
   return (
     <BrowserRouter>
@@ -13,9 +15,10 @@ function App() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-
           <Route path="/rooms" element={<Rooms />} />
-          <Route path="/booking" element={<Booking />} />
+          <Route path="/book-now" element={<Booking />} />
+          {/* <Route path="/book-now/:id" element={<Booking />} /> */}
+          <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
         <Route path="/login" element={<AuthPage />} />

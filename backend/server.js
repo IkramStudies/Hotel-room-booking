@@ -4,10 +4,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
-
-// Import your configurations and routes
+const MongoStore = require("connect-mongo").default;
 const connectDB = require("./config/db");
-require("./config/passport"); // This executes your Google Strategy logic
+require("./config/passport");
+
+// Route Imports
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const roomRoutes = require("./routes/roomRoutes");
@@ -18,23 +19,34 @@ const app = express();
 connectDB();
 
 // 2. Middlewares
+app.set("trust proxy", 1);
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(
   cors({
-    origin: "http://localhost:5173", // Your React/Vite frontend
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     credentials: true,
   }),
 );
 
-// 3. Session Configuration (Required for Passport)
+// 3. Session Configuration
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "stayease_secret_key",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI, // Connects directly to your DB
+      collectionName: "sessions",
+      ttl: 24 * 60 * 60, // Session stays for 1 day
+    }),
     cookie: {
-      secure: false, // Set to true if using HTTPS
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000,
     },
   }),
 );
@@ -46,10 +58,16 @@ app.use(passport.session());
 // 5. Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
-app.use("/api/admin", adminRoutes); // Protected routes for the Admin View
+app.use("/api/admin", adminRoutes);
 
-// 6. Error Handling Middleware
+// 6. Base Route
+app.get("/", (req, res) => {
+  res.send("StayEase API is running...");
+});
+
+// 7. Error Handling
 app.use((err, req, res, next) => {
+  console.error(err.stack);
   const statusCode = err.statusCode || 500;
   res.status(statusCode).json({
     success: false,
@@ -59,5 +77,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(
+    `Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`,
+  );
 });

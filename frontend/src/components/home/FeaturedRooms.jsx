@@ -121,7 +121,7 @@ const FeaturedRooms = () => {
                     </div>
 
                     <Link
-                      to={`/booking?room=${room.id}`}
+                      to={`/book-now?room=${room.id}`}
                       className="mt-auto w-full py-4 bg-[#2563EB] text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-[#1d4ed8] transition-all duration-300 group/btn shadow-lg shadow-blue-100 hover:shadow-blue-200"
                     >
                       Book Your Stay

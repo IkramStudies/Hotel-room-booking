@@ -1,7 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { googleAuthSuccess, logout } = require("../controllers/authController");
+const {
+  register,
+  verifyOtp,
+  login,
+  googleAuthSuccess,
+  logout,
+} = require("../controllers/authController");
+
+// --- MANUAL AUTH ROUTES ---
+
+// Registration (Triggers OTP)
+router.post("/register", register);
+
+// OTP Verification
+router.post("/verify-otp", verifyOtp);
+
+// Manual Login
+router.post("/login", login);
+
+// --- GOOGLE AUTH ROUTES ---
 
 // Start Google Auth
 router.get(
@@ -16,11 +35,12 @@ router.get(
     failureRedirect: "http://localhost:5173/login",
   }),
   (req, res) => {
-    res.redirect("http://localhost:5173/dashboard");
+    // Redirects to your React frontend home page
+    res.redirect("http://localhost:5173/");
   },
 );
 
-// Check if user is logged in (used by React frontend)
+// Check Session Status (Used by React to see if user is logged in)
 router.get("/login/success", googleAuthSuccess);
 
 // Logout

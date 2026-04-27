@@ -25,7 +25,7 @@ const Rooms = () => {
   return (
     <div className="min-h-screen bg-white font-sans">
       {/* Page Header - Matching the "StayEase Advantage" style */}
-      <div className="bg-[#F9FAFB] py-20 md:py-28 mb-16">
+      <div className="bg-[#F9FAFB] py-16 md:py-18 mb-16">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-[#2563EB] font-bold tracking-widest uppercase text-sm mb-4">
             The StayEase Collection
