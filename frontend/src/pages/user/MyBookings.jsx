@@ -19,7 +19,7 @@ const MyBookings = () => {
     const fetchBookings = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/auth/bookings/my-bookings",
+          "http://localhost:5000/api/bookings/my-bookings",
           {
             withCredentials: true,
           },

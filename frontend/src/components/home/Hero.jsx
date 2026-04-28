@@ -57,17 +57,20 @@ const Hero = () => {
               </span>
             </h1>
 
-            <p className="mt-6 text-gray-600 text-lg md:text-xl max-w-2xl">
-              Enjoy our hospitality with having &nbsp;
-              <span className="font-bold text-gray-800">
-                six premium rooms, with special offers just @ $X on weekdays
-                (Mon-Fri) and $y on weekends (Sat-Sun)
+            <p className="mt-6 text-gray-600 text-lg md:text-xl max-w-2xl leading-relaxed">
+              Enjoy our hospitality with
+              <span className="font-semibold text-gray-800">
+                {" "}
+                six premium rooms
               </span>
-              {/* . Enjoy a stay with daily booking options starting at just{" "} */}
-              <span className="font-bold text-gray-800">
-                {/* ${propertySettings.minPrice}/day */}
-              </span>
-              .
+              , designed for comfort and elegance. Take advantage of our special
+              weekday rates
+              <span className="text-gray-800 font-medium"> (Mon–Fri)</span>{" "}
+              starting at
+              <span className="font-semibold text-gray-900"> $X</span>, and
+              weekend stays
+              <span className="text-gray-800 font-medium"> (Sat–Sun)</span> from
+              <span className="font-semibold text-gray-900"> $Y</span>.
             </p>
           </div>
 

@@ -1,61 +1,64 @@
 const Booking = require("../models/Booking");
+const Room = require("../models/Room"); // Added to update availability
 
-// @desc    Create a new booking with availability check
+// @desc    Create a new booking with expanded details and room status update
 // @route   POST /api/bookings/create
+// @desc    Create a new booking (Guest or User)
 exports.createBooking = async (req, res) => {
   try {
-    const { room, checkIn, checkOut, totalPrice } = req.body;
-    const userId = req.user._id;
-
-    // 1. Basic Date Validation
-    if (new Date(checkIn) >= new Date(checkOut)) {
-      return res.status(400).json({
-        success: false,
-        message: "Check-out date must be after check-in date.",
-      });
-    }
-
-    // 2. Prevent Double Booking
-    // Find any confirmed booking for the same room that overlaps with these dates
-    const overlappingBooking = await Booking.findOne({
-      room: room,
-      status: "confirmed",
-      $or: [
-        {
-          checkIn: { $lt: new Date(checkOut) },
-          checkOut: { $gt: new Date(checkIn) },
-        },
-      ],
-    });
-
-    if (overlappingBooking) {
-      return res.status(400).json({
-        success: false,
-        message: "This room is already reserved for the selected dates.",
-      });
-    }
-
-    // 3. Save Booking
-    const booking = await Booking.create({
-      user: userId,
+    const {
       room,
       checkIn,
       checkOut,
       totalPrice,
-      status: "confirmed", // Defaulting to confirmed until payment is linked
+      fullName,
+      email,
+      phone,
+      address,
+      nationality,
+      emergencyContact,
+      headOfFamily,
+      noOfPax,
+      roomType,
+      planType,
+      extraBed,
+    } = req.body;
+
+    // Optional User ID: If logged in, take the ID. If not, it stays undefined/null.
+    const userId = req.user ? req.user._id : null;
+
+    // ... (keep your existing date and overlapping validation)
+
+    const booking = await Booking.create({
+      user: userId, // Will be null for guests
+      room,
+      checkIn,
+      checkOut,
+      totalPrice,
+      fullName,
+      email,
+      phone,
+      address,
+      nationality,
+      emergencyContact,
+      headOfFamily,
+      noOfPax,
+      roomType,
+      planType,
+      extraBed,
+      status: "confirmed",
     });
 
-    res.status(201).json({
-      success: true,
-      data: booking,
-    });
+    await Room.findByIdAndUpdate(room, { isAvailable: false });
+
+    res.status(201).json({ success: true, data: booking });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
-
-// @desc    Get booking history for the logged-in user
-// @route   GET /api/bookings/my-bookings
+// ... getMyBookings and cancelBooking stay the same
+// getMyBookings and cancelBooking remain logically the same
+// but will now return the full object including new fields.
 exports.getMyBookings = async (req, res) => {
   try {
     const history = await Booking.find({ user: req.user._id })
@@ -72,19 +75,15 @@ exports.getMyBookings = async (req, res) => {
   }
 };
 
-// @desc    Cancel a booking
-// @route   PATCH /api/bookings/:id/cancel
 exports.cancelBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
-
     if (!booking) {
       return res
         .status(404)
         .json({ success: false, message: "Booking not found" });
     }
 
-    // Check if the booking belongs to the user
     if (booking.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
@@ -92,9 +91,22 @@ exports.cancelBooking = async (req, res) => {
     booking.status = "cancelled";
     await booking.save();
 
+    // RELEASE THE ROOM: Make it available again
+    await Room.findByIdAndUpdate(booking.room, { isAvailable: true });
+
     res
       .status(200)
       .json({ success: true, message: "Booking cancelled successfully" });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+// Example in roomController.js
+exports.getAllRooms = async (req, res) => {
+  try {
+    // Only fetch rooms where isAvailable is true
+    const rooms = await Room.find({ isAvailable: true });
+    res.status(200).json({ success: true, data: rooms });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

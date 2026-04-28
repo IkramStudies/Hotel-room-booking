@@ -2,16 +2,30 @@ const mongoose = require("mongoose");
 
 const roomSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    pricePerStay: { type: Number, required: true },
+    name: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    pricePerStay: {
+      type: Number,
+      required: true,
+    },
     images: [String], // Array of URLs for the room gallery
     category: {
       type: String,
-      enum: ["Deluxe", "Luxury", "Suite"],
-      default: "Deluxe",
+      // Updated to match your booking form options for consistency
+      enum: ["Single", "Premium", "Suite"],
+      default: "Premium",
     },
-    isAvailable: { type: Boolean, default: true },
+    // This is the key field the booking controller now toggles
+    isAvailable: {
+      type: Boolean,
+      default: true,
+    },
     amenities: [String], // e.g., ["WiFi", "Pool", "Breakfast"]
   },
   { timestamps: true },

@@ -148,7 +148,7 @@ const Footer = () => {
           {/* Signature with Increased Font Size */}
           <p className="text-gray-400 text-sm font-semibold">
             Made with <span className="text-red-500">❤️</span> by{" "}
-            <span className="text-gray-700 font-bold">Digi Alpha 9</span>
+            <span className="text-gray-700 font-bold">Ikram ul Haq</span>
           </p>
 
           <div className="flex gap-8 text-xs font-semibold text-gray-400 uppercase tracking-widest">

@@ -12,7 +12,7 @@ require("./config/passport");
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const roomRoutes = require("./routes/roomRoutes");
-
+const bookingRoutes = require("./routes/bookingRoutes");
 const app = express();
 
 // 1. Database Connection
@@ -59,7 +59,7 @@ app.use(passport.session());
 app.use("/api/auth", authRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/admin", adminRoutes);
-
+app.use("/api/bookings", bookingRoutes);
 // 6. Base Route
 app.get("/", (req, res) => {
   res.send("StayEase API is running...");

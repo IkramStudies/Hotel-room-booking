@@ -7,7 +7,7 @@ import MyBookings from "./pages/user/MyBookings"; // Adding history page
 import Contact from "./pages/user/Contact";
 import AuthPage from "./pages/user/Login";
 import ScrollToTop from "./components/common/ScrollToTop";
-
+import BookingSuccess from "./components/booking/BookingSuccess";
 function App() {
   return (
     <BrowserRouter>
@@ -22,6 +22,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Route>
         <Route path="/login" element={<AuthPage />} />
+        <Route path="/booking-success" element={<BookingSuccess />} />
       </Routes>
     </BrowserRouter>
   );

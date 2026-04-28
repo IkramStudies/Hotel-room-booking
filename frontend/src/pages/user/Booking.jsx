@@ -85,7 +85,7 @@ const Booking = () => {
           <span className="bg-[#EFF6FF] text-[#2563EB] text-[10px] font-black uppercase px-4 py-1.5 rounded-full tracking-widest shadow-sm shadow-blue-100">
             Secure Reservation
           </span>
-          <h1 className="text-4xl md:text-5xl font-black text-[#111827] mt-4 tracking-tight">
+          <h1 className="text-3xl md:text-5xl font-black text-[#111827] mt-4 tracking-tight">
             Book Your <span className="text-[#2563EB]">Stay</span>
           </h1>
           <p className="text-[#6B7280] mt-3 text-lg font-medium">

@@ -30,7 +30,7 @@ const Rooms = () => {
           <h2 className="text-[#2563EB] font-bold tracking-widest uppercase text-sm mb-4">
             The StayEase Collection
           </h2>
-          <h1 className="text-4xl md:text-6xl font-extrabold text-[#111827] mb-6 tracking-tight leading-tight">
+          <h1 className="text-3xl md:text-6xl font-extrabold text-[#111827] mb-6 tracking-tight leading-tight">
             Our <span className="text-[#2563EB]">Private</span> Sanctuary
           </h1>
           <p className="text-[#6B7280] max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">

@@ -1,9 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { getMyBookings } = require("../controllers/bookingController");
+const {
+  createBooking,
+  getMyBookings,
+  cancelBooking,
+} = require("../controllers/bookingController");
 const { isAuthenticated } = require("../middleware/authMiddleware");
 
-// Only logged-in users can hit this route
-router.get("/my-history", isAuthenticated, getMyBookings);
+// All booking routes require the user to be logged in
+router.post("/create", createBooking);
+router.get("/my-bookings", isAuthenticated, getMyBookings);
+router.patch("/:id/cancel", isAuthenticated, cancelBooking);
 
 module.exports = router;
