@@ -12,7 +12,7 @@ const bookingSchema = new mongoose.Schema(
       ref: "Room",
       required: true,
     },
-    // --- Guest Identity Fields ---
+    // Guest Details
     fullName: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
@@ -21,7 +21,7 @@ const bookingSchema = new mongoose.Schema(
     emergencyContact: { type: String, required: true },
     headOfFamily: { type: String, required: true },
 
-    // --- Stay Details ---
+    // Stay Details
     noOfPax: { type: Number, required: true },
     checkIn: { type: Date, required: true },
     checkOut: { type: Date, required: true },
