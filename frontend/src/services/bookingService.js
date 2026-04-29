@@ -15,3 +15,18 @@ export const fetchMyBookings = async () => {
   });
   return response.data; // Ensure this matches your backend response structure
 };
+
+import api from "./api";
+
+export const checkRoomAvailability = async (bookingData) => {
+  try {
+    const response = await api.post(
+      "/bookings/check-availability",
+      bookingData,
+    );
+    return response.data; // Expected { available: true/false }
+  } catch (error) {
+    console.error("Error checking availability:", error);
+    throw error;
+  }
+};

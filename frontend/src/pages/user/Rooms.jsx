@@ -10,9 +10,15 @@ const Rooms = () => {
   useEffect(() => {
     const getRooms = async () => {
       try {
-        // Fetching from your MERN backend
         const data = await fetchAllRooms();
-        setRooms(data);
+
+        // Logic: Hide rooms that are under construction from the gallery
+        // but keep "Maintenance" or "Unavailable" visible but locked.
+        const visibleRooms = data.filter(
+          (room) => room.status !== "Under Construction",
+        );
+
+        setRooms(visibleRooms);
       } catch (error) {
         console.error("Error loading rooms:", error);
       } finally {
@@ -24,7 +30,7 @@ const Rooms = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans">
-      {/* Page Header - Matching the "StayEase Advantage" style */}
+      {/* Page Header */}
       <div className="bg-[#F9FAFB] py-16 md:py-18 mb-16">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-[#2563EB] font-bold tracking-widest uppercase text-sm mb-4">
@@ -34,8 +40,9 @@ const Rooms = () => {
             Our <span className="text-[#2563EB]">Private</span> Sanctuary
           </h1>
           <p className="text-[#6B7280] max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
-            Discover {rooms.length || 6} exclusively designed designer rooms in
-            Dallas, where residential comfort meets professional hotel luxury.
+            Discover {loading ? "..." : rooms.length} exclusively designed
+            designer rooms in Dallas, where residential comfort meets
+            professional hotel luxury.
           </p>
         </div>
       </div>
@@ -53,16 +60,17 @@ const Rooms = () => {
         {!loading && rooms.length === 0 && (
           <div className="text-center py-20">
             <h3 className="text-2xl font-bold text-[#111827]">
-              No rooms found.
+              No rooms currently available.
             </h3>
             <p className="text-[#6B7280] mt-2">
-              Please check back later or try refreshing.
+              Our sanctuary is currently undergoing updates. Please check back
+              soon.
             </p>
           </div>
         )}
       </div>
 
-      {/* Helpful Support Footer - Updated to match your Stats Bar theme */}
+      {/* Support Footer */}
       <div className="max-w-7xl mx-auto px-6 mb-24">
         <div className="bg-[#2563EB] rounded-[3rem] p-10 md:p-16 flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl shadow-blue-200">
           <div className="text-center md:text-left">

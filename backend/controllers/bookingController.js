@@ -24,17 +24,57 @@ exports.createBooking = async (req, res) => {
       extraBed,
     } = req.body;
 
-    // Optional User ID: If logged in, take the ID. If not, it stays undefined/null.
     const userId = req.user ? req.user._id : null;
 
-    // ... (keep your existing date and overlapping validation)
+    // 1. DYNAMIC AVAILABILITY CHECK
+    // This ensures Room B is only "Unavailable" if the dates actually overlap
+    const overlappingBooking = await Booking.findOne({
+      room: room,
+      status: "confirmed",
+      $or: [
+        {
+          checkIn: { $lt: new Date(checkOut) },
+          checkOut: { $gt: new Date(checkIn) },
+        },
+      ],
+    });
 
+    if (overlappingBooking) {
+      return res.status(400).json({
+        success: false,
+        message: "This room is already reserved for the selected dates.",
+      });
+    }
+
+    // 2. DISCOUNT LOGIC
+    const today = new Date();
+    const checkInDate = new Date(checkIn);
+
+    // Calculate days in advance
+    const diffTime = checkInDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    // Check total historical bookings for the "First Guest" rule
+    const totalBookingsCount = await Booking.countDocuments({
+      status: "confirmed",
+    });
+
+    let appliedDiscount = 0;
+    let finalPrice = totalPrice;
+
+    // Apply 30% if it's the first 2 bookings OR booked 30+ days in advance
+    if (totalBookingsCount < 2 || diffDays >= 30) {
+      appliedDiscount = 0.3;
+      finalPrice = totalPrice * (1 - appliedDiscount);
+    }
+
+    // 3. CREATE THE BOOKING
     const booking = await Booking.create({
-      user: userId, // Will be null for guests
+      user: userId,
       room,
       checkIn,
       checkOut,
-      totalPrice,
+      totalPrice: finalPrice, // Saved with the discount applied
       fullName,
       email,
       phone,
@@ -49,9 +89,17 @@ exports.createBooking = async (req, res) => {
       status: "confirmed",
     });
 
-    await Room.findByIdAndUpdate(room, { isAvailable: false });
+    // NOTE: We no longer update Room.isAvailable to false here.
+    // The availability is now handled by the 'overlappingBooking' check above.
 
-    res.status(201).json({ success: true, data: booking });
+    res.status(201).json({
+      success: true,
+      data: booking,
+      message:
+        appliedDiscount > 0
+          ? "Booking confirmed with 30% discount!"
+          : "Booking confirmed.",
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -72,6 +120,35 @@ exports.getMyBookings = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.checkAvailability = async (req, res) => {
+  try {
+    // 1. Match the field name sent from the frontend
+    const { roomId, checkIn, checkOut } = req.body;
+
+    // 2. Query 'room' (not roomId) to match your Mongoose Schema
+    const conflict = await Booking.findOne({
+      room: roomId,
+      // 3. Match the lowercase status from your Schema enum
+      status: { $ne: "cancelled" },
+      $or: [
+        {
+          checkIn: { $lt: new Date(checkOut) },
+          checkOut: { $gt: new Date(checkIn) },
+        },
+      ],
+    });
+
+    if (conflict) {
+      return res.status(200).json({ available: false });
+    }
+
+    res.status(200).json({ available: true });
+  } catch (error) {
+    console.error("Availability Check Error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

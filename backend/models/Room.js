@@ -5,6 +5,7 @@ const roomSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
     description: {
       type: String,
@@ -14,19 +15,31 @@ const roomSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    images: [String], // Array of URLs for the room gallery
+    images: {
+      type: [String],
+      required: true,
+    },
     category: {
       type: String,
-      // Updated to match your booking form options for consistency
       enum: ["Single", "Premium", "Suite"],
       default: "Premium",
     },
-    // This is the key field the booking controller now toggles
-    isAvailable: {
-      type: Boolean,
-      default: true,
+    /**
+     * Physical Status of the Room:
+     * - Available: Ready for guests.
+     * - Unavailable: Manually taken off the market.
+     * - Under Construction: Long-term renovation/building.
+     * - Maintenance: Short-term cleaning or repairs.
+     */
+    status: {
+      type: String,
+      enum: ["Available", "Unavailable", "Under Construction", "Maintenance"],
+      default: "Available",
     },
-    amenities: [String], // e.g., ["WiFi", "Pool", "Breakfast"]
+    amenities: {
+      type: [String],
+      default: [], // e.g., ["WiFi", "AC", "Kitchen"]
+    },
   },
   { timestamps: true },
 );

@@ -19,6 +19,11 @@ const Booking = () => {
   const checkIn = searchParams.get("checkIn") || "";
   const checkOut = searchParams.get("checkOut") || "";
 
+  // Scroll to top on mount or when roomId changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [roomId]);
+
   useEffect(() => {
     const getRooms = async () => {
       try {
@@ -33,12 +38,19 @@ const Booking = () => {
     getRooms();
   }, []);
 
+  // Sync selectedRoom based on the roomId in the URL
   const selectedRoom = useMemo(() => {
     if (rooms.length === 0) return null;
-    return rooms.find((r) => r._id === roomId) || rooms[0];
+
+    if (roomId) {
+      const found = rooms.find((r) => String(r._id) === String(roomId));
+      if (found) return found;
+    }
+
+    return rooms[0]; // Fallback to first room
   }, [rooms, roomId]);
 
-  // --- CENTRALIZED PRICING LOGIC ---
+  // Pricing calculation
   const pricing = useMemo(() => {
     if (!checkIn || !checkOut || !selectedRoom) {
       return {
@@ -55,9 +67,7 @@ const Booking = () => {
     const diffDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
     const nights = diffDays > 0 ? diffDays : 0;
 
-    // Pricing Constants (USD) - Ensure these match your business logic
-    const planRates = { EPAI: 0, CPAI: 100, MAPAI: 250, APAI: 400 };
-
+    const planRates = { EPAI: 0, CPAI: 20, MAPAI: 40, APAI: 70 };
     const roomTotal =
       (selectedRoom.pricePerStay || selectedRoom.price || 0) * nights;
     const mealTotal = (planRates[mealPlan] || 0) * noOfPax * nights;
@@ -151,7 +161,7 @@ const Booking = () => {
                 <select
                   value={selectedRoom?._id || ""}
                   onChange={(e) => handleParamChange("room", e.target.value)}
-                  className="w-full bg-[#F9FAFB] border border-gray-200 rounded-2xl p-4 font-black appearance-none outline-none"
+                  className="w-full bg-[#F9FAFB] border border-gray-100 rounded-2xl p-4 font-black appearance-none outline-none"
                 >
                   {rooms.map((room) => (
                     <option key={room._id} value={room._id}>
