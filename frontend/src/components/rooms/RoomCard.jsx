@@ -5,6 +5,7 @@ import { Bed, Users, Expand, ArrowRight, Star, HardHat } from "lucide-react";
 const RoomCard = ({ room }) => {
   // Logic: Room is only bookable if status is explicitly "Available"
   const isBookable = room.status === "Available";
+
   const isUnderMaintenance =
     room.status === "Maintenance" || room.status === "Unavailable";
 
